@@ -2,8 +2,12 @@
 
 import { useState } from "react"
 import Link from "next/link"
-import { ChevronLeft, ChevronRight, Mail, Facebook, Twitter, Music2, ShoppingCart } from "lucide-react"
-import { MusicPlayer } from "@/components/MusicPlayer"
+import { ChevronLeft, ChevronRight, Mail, Facebook, Twitter, Music2, ShoppingCart, Play } from "lucide-react"
+import dynamic from "next/dynamic"
+
+const MusicPlayer = dynamic(() => import("@/components/MusicPlayer"), {
+  ssr: false,
+})
 
 const slides = [
   {
@@ -23,19 +27,40 @@ const slides = [
   },
 ]
 
+const releases = [
+  {
+    artist: "G.U.R.I",
+    title: "Morphing (Original Mix)",
+    description: "2024",
+    image: "https://i1.sndcdn.com/artworks-gp7zOz3Q7fImFubN-pJQ5sg-t500x500.jpg",
+    soundcloudUrl: "https://api.soundcloud.com/tracks/1533941911",
+  },
+  {
+    artist: "Rafa Kao, Cam Harris",
+    title: "Flotian (Original Mix)",
+    description: "2018",
+    image: "https://i1.sndcdn.com/artworks-000445814340-1cd4k0-t500x500.jpg",
+    soundcloudUrl: "https://api.soundcloud.com/tracks/534618756",
+  },
+  {
+    artist: "G.U.R.I",
+    title: "Magnetosphere (Original Mix)",
+    description: "2023",
+    image: "https://i1.sndcdn.com/artworks-Oq3gqfhqeF1Llmmr-uWJV9w-t500x500.jpg",
+    soundcloudUrl: "https://api.soundcloud.com/tracks/1375445389",
+  },
+  {
+    artist: "G.U.R.I",
+    title: "Aurora (Original Mix)",
+    description: "2022",
+    image: "https://i1.sndcdn.com/artworks-vSmG712akh96ZUTV-LbyOXw-t500x500.jpg",
+    soundcloudUrl: "https://api.soundcloud.com/tracks/1375437160",
+  },
+]
+
 export default function HomePage() {
   const [currentSlide, setCurrentSlide] = useState(0)
-  const [currentTrack, setCurrentTrack] = useState(
-    "https://w.soundcloud.com/player/?url=https://on.soundcloud.com/sfspcx6eWqxxYPiEA",
-  )
-
-  const previousSlide = () => {
-    setCurrentSlide((curr) => (curr === 0 ? slides.length - 1 : curr - 1))
-  }
-
-  const nextSlide = () => {
-    setCurrentSlide((curr) => (curr === slides.length - 1 ? 0 : curr + 1))
-  }
+  const [currentTrack, setCurrentTrack] = useState<string | null>(null)
 
   return (
     <div className="min-h-screen bg-[#050d10] relative overflow-hidden">
@@ -87,13 +112,19 @@ export default function HomePage() {
                   </h1>
                 </div>
                 <p className="text-gray-400 text-sm max-w-md mx-auto md:mx-0">
-                  TH018: Rafa Kao & Gabriel Samy – Ritual (Original Mix)
-
-Tinnie House Records proudly presents "Ritual", the latest melodic house & techno masterpiece from Rafa Kao & Gabriel Samy. A deep, hypnotic journey driven by pulsating rhythms, ethereal synths, and an entrancing groove, "Ritual" blends raw energy with atmospheric textures to captivate dancefloors.
-
-Available March 29, 2025, on Beatport, Spotify, and all major digital platforms. 🔥🎶 #MelodicHouse #Techno #TinnieHouseRecords.
+                  TH018: Rafa Kao & Gabriel Samy – Ritual (Original Mix) Tinnie House Records proudly presents "Ritual",
+                  the latest melodic house & techno masterpiece from Rafa Kao & Gabriel Samy. A deep, hypnotic journey
+                  driven by pulsating rhythms, ethereal synths, and an entrancing groove, "Ritual" blends raw energy
+                  with atmospheric textures to captivate dancefloors. Available March 29, 2025, on Beatport, Spotify,
+                  and all major digital platforms. 🔥🎶
                 </p>
-                <button className="custom-button text-sm">Pre Order</button>
+                <button
+                  onClick={() => setCurrentTrack("https://api.soundcloud.com/tracks/1533941911")}
+                  className="custom-button text-sm inline-flex items-center gap-2"
+                >
+                  <Play className="h-4 w-4" />
+                  Listen
+                </button>
                 <div className="pt-8 md:pt-12">
                   <p className="text-xs text-gray-500 uppercase font-orbitron">
                     STEP INTO THE FUTURE, ONE
@@ -170,14 +201,14 @@ Available March 29, 2025, on Beatport, Spotify, and all major digital platforms.
 
               {/* Navigation Buttons */}
               <button
-                onClick={previousSlide}
+                onClick={() => setCurrentSlide((curr) => (curr === 0 ? slides.length - 1 : curr - 1))}
                 className="absolute left-4 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full border border-blue-500/20 bg-blue-950/20 flex items-center justify-center text-white hover:bg-blue-900/30 transition-colors"
                 aria-label="Previous slide"
               >
                 <ChevronLeft className="w-6 h-6" />
               </button>
               <button
-                onClick={nextSlide}
+                onClick={() => setCurrentSlide((curr) => (curr === slides.length - 1 ? 0 : curr + 1))}
                 className="absolute right-4 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full border border-blue-500/20 bg-blue-950/20 flex items-center justify-center text-white hover:bg-blue-900/30 transition-colors"
                 aria-label="Next slide"
               >
@@ -207,36 +238,7 @@ Available March 29, 2025, on Beatport, Spotify, and all major digital platforms.
             Some of Our Previous Releases
           </h2>
           <div className="space-y-8">
-            {[
-              {
-                artist: "G.U.R.I",
-                title: "Morphing (Original Mix)",
-                description: "2024",
-                image: "https://i1.sndcdn.com/artworks-gp7zOz3Q7fImFubN-pJQ5sg-t500x500.jpg",
-                soundcloudUrl: "https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/1533941911",
-              },
-              {
-                artist: "Rafa Kao, Cam Harris",
-                title: "Flotian (Original Mix)",
-                description: "2018",
-                image: "https://i1.sndcdn.com/artworks-000445814340-1cd4k0-t500x500.jpg",
-                soundcloudUrl: "https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/534618756",
-              },
-              {
-                artist: "G.U.R.I",
-                title: "Magnetosphere (Original Mix)",
-                description: "2023",
-                image: "https://i1.sndcdn.com/artworks-Oq3gqfhqeF1Llmmr-uWJV9w-t500x500.jpg",
-                soundcloudUrl: "https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/1375445389",
-              },
-              {
-                artist: "G.U.R.I",
-                title: "Aurora (Original Mix)",
-                description: "2022",
-                image: "https://i1.sndcdn.com/artworks-vSmG712akh96ZUTV-LbyOXw-t500x500.jpg",
-                soundcloudUrl: "https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/1375437160",
-              },
-            ].map((release, i) => (
+            {releases.map((release, i) => (
               <div key={i} className="flex flex-col md:flex-row items-center gap-4 md:gap-8">
                 <div
                   className={`${i % 2 === 1 ? "md:order-last" : ""} w-full md:w-48 aspect-square bg-gray-800 border border-blue-500/20 overflow-hidden`}
@@ -259,10 +261,7 @@ Available March 29, 2025, on Beatport, Spotify, and all major digital platforms.
                     <h4 className="text-lg text-blue-500 font-orbitron">{release.title}</h4>
                   </div>
                   <p className="text-gray-400">{release.description}</p>
-                  <button
-                    className="custom-button"
-                    onClick={() => release.soundcloudUrl && setCurrentTrack(release.soundcloudUrl)}
-                  >
+                  <button className="custom-button" onClick={() => setCurrentTrack(release.soundcloudUrl)}>
                     Listen
                   </button>
                 </div>

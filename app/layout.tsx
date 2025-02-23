@@ -1,7 +1,7 @@
 import { Orbitron } from "next/font/google"
+import Script from "next/script"
 import "./globals.css"
 import type React from "react"
-import Script from "next/script"
 
 const orbitron = Orbitron({
   subsets: ["latin"],
@@ -17,7 +17,7 @@ export default function RootLayout({
   return (
     <html lang="en" className={orbitron.variable}>
       <head>
-        <Script src="https://w.soundcloud.com/player/api.js" strategy="beforeInteractive" />
+        <Script src="https://w.soundcloud.com/player/api.js" strategy="afterInteractive" />
       </head>
       <body>{children}</body>
     </html>
