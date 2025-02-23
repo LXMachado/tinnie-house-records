@@ -1,0 +1,84 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --background: 201 95% 5%;
+  --blue-glow: 213 100% 50%;
+}
+
+body {
+  background-color: #050d10;
+}
+
+@layer base {
+  h1 {
+    @apply text-2xl md:text-3xl lg:text-4xl;
+  }
+  h2 {
+    @apply text-xl md:text-2xl lg:text-3xl;
+  }
+  h3 {
+    @apply text-lg md:text-xl;
+  }
+}
+
+@layer components {
+  .container {
+    @apply px-4 md:px-6 lg:px-8;
+  }
+
+  .custom-button {
+    position: relative;
+    height: 32px;
+    padding: 0 24px;
+    border: none;
+    background-color: #007bff;
+    color: white;
+    transition: background-color 0.3s ease;
+    clip-path: polygon(0 0, calc(100% - 10px) 0, 100% 10px, 100% 100%, 10px 100%, 0 calc(100% - 10px));
+  }
+
+  .custom-button:hover {
+    background-color: #0056b3;
+  }
+
+  .custom-button-outline {
+    background-color: transparent;
+    color: #007bff;
+    border: 1px solid #007bff;
+    clip-path: polygon(0 0, calc(100% - 10px) 0, 100% 10px, 100% 100%, 10px 100%, 0 calc(100% - 10px));
+  }
+
+  .custom-button-outline:hover {
+    background-color: rgba(0, 123, 255, 0.1);
+    border-color: #0056b3;
+    color: #0056b3;
+  }
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in {
+  animation: fade-in 0.5s ease-out forwards;
+}
+
+@media (max-width: 640px) {
+  .container {
+    @apply px-4;
+  }
+
+  .custom-button {
+    font-size: 0.875rem;
+  }
+}
+
