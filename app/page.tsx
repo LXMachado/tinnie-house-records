@@ -13,7 +13,7 @@ const slides = [
   {
     title: "Ritual",
     artist: "Rafa Kao & Gabriel Samny",
-    description: "Coming Soon",
+    description: "29/03/2025",
   },
   {
     title: "Cabarita",
@@ -88,9 +88,6 @@ export default function HomePage() {
               About Us
             </Link>
             <Link href="#" className="text-gray-400 hover:text-white text-sm font-orbitron">
-              Artists
-            </Link>
-            <Link href="#" className="text-gray-400 hover:text-white text-sm font-orbitron">
               Releases
             </Link>
             <Link href="#" className="text-gray-400 hover:text-white text-sm font-orbitron">
@@ -111,7 +108,7 @@ export default function HomePage() {
                     29/03/2025
                   </h1>
                 </div>
-                <p className="text-gray-400 text-sm max-w-md mx-auto md:mx-0">
+                <p className="text-gray-400 text-lg max-w-md mx-auto md:mx-0">
                   TH018: Rafa Kao & Gabriel Samy – Ritual (Original Mix) Tinnie House Records proudly presents "Ritual",
                   the latest melodic house & techno masterpiece from Rafa Kao & Gabriel Samy. A deep, hypnotic journey
                   driven by pulsating rhythms, ethereal synths, and an entrancing groove, "Ritual" blends raw energy
@@ -119,7 +116,7 @@ export default function HomePage() {
                   and all major digital platforms. 🔥🎶
                 </p>
                 <button
-                  onClick={() => setCurrentTrack("https://api.soundcloud.com/tracks/1533941911")}
+                  onClick={() => setCurrentTrack("https://api.soundcloud.com/tracks/2045752144")}
                   className="custom-button text-sm inline-flex items-center gap-2"
                 >
                   <Play className="h-4 w-4" />
@@ -322,6 +319,14 @@ export default function HomePage() {
                     <ShoppingCart className="h-4 w-4" />
                     Traxsource
                   </Link>
+                  <Link
+                    href="https://www.junodownload.com/labels/Tinnie+House/"
+                    target="_blank"
+                    className="text-sm text-gray-400 hover:text-white inline-flex items-center gap-2"
+                  >
+                    <ShoppingCart className="h-4 w-4" />
+                    Juno Download
+                  </Link>
                 </nav>
               </div>
             </div>
@@ -361,9 +366,6 @@ export default function HomePage() {
                 </Link>
                 <Link href="#" className="text-sm text-gray-400 hover:text-white">
                   About Us
-                </Link>
-                <Link href="#" className="text-sm text-gray-400 hover:text-white">
-                  Artists
                 </Link>
                 <Link href="#" className="text-sm text-gray-400 hover:text-white">
                   Releases
