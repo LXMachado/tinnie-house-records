@@ -28,32 +28,36 @@ body {
     @apply px-4 md:px-6 lg:px-8;
   }
 
-  .custom-button {
+  /* Updated button styles to match the original design */
+  .btn-primary {
     position: relative;
-    height: 32px;
+    height: 40px;
     padding: 0 24px;
-    border: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
     background-color: #007bff;
     color: white;
-    transition: background-color 0.3s ease;
-    clip-path: polygon(0 0, calc(100% - 10px) 0, 100% 10px, 100% 100%, 10px 100%, 0 calc(100% - 10px));
+    clip-path: polygon(0 0, calc(100% - 12px) 0, 100% 12px, 100% 100%, 12px 100%, 0 calc(100% - 12px));
   }
 
-  .custom-button:hover {
-    background-color: #0056b3;
-  }
-
-  .custom-button-outline {
+  .btn-outline {
+    position: relative;
+    height: 40px;
+    padding: 0 24px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
     background-color: transparent;
     color: #007bff;
     border: 1px solid #007bff;
-    clip-path: polygon(0 0, calc(100% - 10px) 0, 100% 10px, 100% 100%, 10px 100%, 0 calc(100% - 10px));
+    clip-path: polygon(0 0, calc(100% - 12px) 0, 100% 12px, 100% 100%, 12px 100%, 0 calc(100% - 12px));
   }
 
-  .custom-button-outline:hover {
+  .btn-outline:hover {
     background-color: rgba(0, 123, 255, 0.1);
-    border-color: #0056b3;
-    color: #0056b3;
   }
 }
 
@@ -75,10 +79,6 @@ body {
 @media (max-width: 640px) {
   .container {
     @apply px-4;
-  }
-
-  .custom-button {
-    font-size: 0.875rem;
   }
 }
 

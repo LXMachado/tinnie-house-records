@@ -4,7 +4,6 @@ import type React from "react"
 
 import { useState, useEffect, useRef, useCallback } from "react"
 import { Play, Pause, Volume2, VolumeX, Loader2 } from "lucide-react"
-import { CustomButton } from "@/components/ui/custom-button"
 
 interface MusicPlayerProps {
   defaultTrack?: string | null
@@ -13,7 +12,7 @@ interface MusicPlayerProps {
 export default function MusicPlayer({ defaultTrack }: MusicPlayerProps) {
   const [isPlaying, setIsPlaying] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
-  const [currentTitle, setCurrentTitle] = useState("No track selected")
+  const [currentTitle, setCurrentTitle] = useState("Loading...")
   const [volume, setVolume] = useState(50)
   const [isMuted, setIsMuted] = useState(false)
   const [error, setError] = useState<string | null>(null)
@@ -22,25 +21,73 @@ export default function MusicPlayer({ defaultTrack }: MusicPlayerProps) {
   const currentTrackRef = useRef<string | null>(null)
   const isInitializedRef = useRef(false)
 
+  // Log when defaultTrack changes
+  useEffect(() => {
+    console.log("MusicPlayer defaultTrack changed:", defaultTrack)
+  }, [defaultTrack])
+
   // Extract track ID from URL
   const getTrackId = useCallback((url: string) => {
-    // Handle full widget URLs
-    const widgetMatch = url.match(/tracks%2F(\d+)/)
-    if (widgetMatch) return widgetMatch[1]
+    console.log("Getting track ID from URL:", url)
 
-    // Handle direct API URLs
+    // Handle direct API URLs with track ID
     const apiMatch = url.match(/tracks\/(\d+)/)
-    if (apiMatch) return apiMatch[1]
+    if (apiMatch) {
+      console.log("Found API track ID:", apiMatch[1])
+      return apiMatch[1]
+    }
 
+    // Handle SoundCloud URLs with username/track-name format
+    const userTrackMatch = url.match(/soundcloud\.com\/([^/]+)\/([^/]+)/)
+    if (userTrackMatch) {
+      console.log("Found user/track format:", userTrackMatch[1], userTrackMatch[2])
+      return `${userTrackMatch[1]}/${userTrackMatch[2]}`
+    }
+
+    // If it's just a number, assume it's a track ID
+    if (/^\d+$/.test(url)) {
+      console.log("URL is just a track ID:", url)
+      return url
+    }
+
+    console.log("Could not extract track ID from URL")
     return null
   }, [])
 
-  // Format track URL to ensure it's in the correct format
+  // Format track URL to ensure it's in the correct format for the widget
   const formatTrackUrl = useCallback(
     (url: string) => {
       if (!url) return null
+      console.log("Formatting track URL:", url)
+
+      // If it's already a SoundCloud URL, use it directly
+      if (url.includes("soundcloud.com/")) {
+        console.log("URL is already a SoundCloud URL")
+        return url
+      }
+
+      // If it's an API URL, use it directly
+      if (url.includes("api.soundcloud.com/tracks/")) {
+        console.log("URL is already an API URL")
+        return url
+      }
+
+      // Extract the track ID and create a proper URL
       const trackId = getTrackId(url)
-      return trackId ? `https://api.soundcloud.com/tracks/${trackId}` : null
+      if (!trackId) {
+        console.log("Could not get track ID")
+        return null
+      }
+
+      // If it contains a slash, it's a user/track format
+      if (trackId.includes("/")) {
+        console.log("Creating URL from user/track format")
+        return `https://soundcloud.com/${trackId}`
+      }
+
+      // Otherwise it's just a track ID
+      console.log("Creating URL from track ID")
+      return `https://api.soundcloud.com/tracks/${trackId}`
     },
     [getTrackId],
   )
@@ -154,18 +201,42 @@ export default function MusicPlayer({ defaultTrack }: MusicPlayerProps) {
           callback: (err: any) => {
             if (err) {
               console.error(new Date().toISOString(), "Load error:", err)
-              setError("Error loading track")
+              setError('Error loading track. The track may have been removed or  "Load error:', err)
+              setError("Error loading track. The track may have been removed or is unavailable.")
               setIsLoading(false)
+
+              // Try alternative URL format if the track fails to load
+              if (trackUrl.includes("soundcloud.com/") && !trackUrl.includes("api.soundcloud.com")) {
+                const parts = trackUrl.split("/")
+                const username = parts[parts.length - 2]
+                const trackName = parts[parts.length - 1]
+
+                if (username && trackName) {
+                  console.log("Trying alternative API URL format...")
+                  // Try to load using the API URL format
+                  const apiUrl = `https://api.soundcloud.com/tracks/${trackName}`
+                  currentTrackRef.current = null // Reset to allow reloading
+                  loadTrack(apiUrl)
+                }
+              }
               return
             }
             console.log(new Date().toISOString(), "Track loaded successfully")
             setIsLoading(false)
             widgetRef.current.setVolume(volume / 100)
+
+            // Get track info including artwork
+            widgetRef.current.getCurrentSound((sound: any) => {
+              if (sound) {
+                console.log("Track info:", sound)
+                setCurrentTitle(sound.title || "Unknown Track")
+              }
+            })
           },
         })
       } catch (err) {
         console.error(new Date().toISOString(), "Load track error:", err)
-        setError("Error loading track")
+        setError("Error loading track. Please try again.")
         setIsLoading(false)
       }
     },
@@ -221,10 +292,11 @@ export default function MusicPlayer({ defaultTrack }: MusicPlayerProps) {
     <div className="fixed bottom-0 left-0 right-0 bg-[#0c1618]/95 border-t border-blue-500/20 backdrop-blur-sm z-20">
       <div className="container mx-auto px-4 py-3 flex items-center justify-between gap-4">
         <div className="flex items-center gap-3">
-          <CustomButton
+          <button
             onClick={togglePlay}
-            className="h-9 w-9 p-0 hover:bg-blue-500/30"
+            className="btn-primary h-9 w-9 p-0 hover:bg-blue-500/30"
             disabled={isLoading || !defaultTrack}
+            style={{ padding: 0 }}
           >
             {isLoading ? (
               <Loader2 className="h-5 w-5 animate-spin" />
@@ -233,7 +305,7 @@ export default function MusicPlayer({ defaultTrack }: MusicPlayerProps) {
             ) : (
               <Play className="h-5 w-5" />
             )}
-          </CustomButton>
+          </button>
           <div className="flex items-center gap-2">
             <button onClick={toggleMute} className="text-gray-400 hover:text-white" disabled={!defaultTrack}>
               {isMuted || volume === 0 ? <VolumeX className="h-5 w-5" /> : <Volume2 className="h-5 w-5" />}
