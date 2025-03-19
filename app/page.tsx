@@ -111,7 +111,7 @@ export default function HomePage() {
               <div className="space-y-4">
                 <h2 className="text-xl font-medium text-blue-500 font-orbitron">WHO WE ARE</h2>
                 <h3 className="text-3xl md:text-4xl font-bold text-white font-orbitron">
-                  GOLD COAST'S PREMIER UNDERGROUND ELECTRONIC LABEL
+                  GOLD COAST'S PREMIER UNDERGROUND ELECTRONIC MUSIC LABEL
                 </h3>
               </div>
               <div className="space-y-6">
