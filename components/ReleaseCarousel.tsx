@@ -10,6 +10,7 @@ interface Track {
   user: { username: string }
   artwork_url: string | null
   permalink_url: string
+  created_at?: string
 }
 
 interface ReleaseCarouselProps {
@@ -18,16 +19,16 @@ interface ReleaseCarouselProps {
   onTrackSelect?: (trackUrl: string) => void
   featured?: boolean
   offset?: number
-  excludeLatest?: boolean // New prop to exclude the latest track
+  excludeLatest?: boolean
 }
 
 export default function ReleaseCarousel({
   username = "tinniehouserecords",
-  limit = 10,
+  limit = 8, // Changed default to 8
   onTrackSelect,
   featured = false,
   offset = 0,
-  excludeLatest = false, // Default to false to maintain backward compatibility
+  excludeLatest = false,
 }: ReleaseCarouselProps) {
   const [tracks, setTracks] = useState<Track[]>([])
   const [loading, setLoading] = useState(true)
@@ -56,7 +57,11 @@ export default function ReleaseCarousel({
         }
 
         // If excludeLatest is true, remove the first track (latest)
-        const displayTracks = excludeLatest ? data.tracks.slice(1) : data.tracks
+        let displayTracks = excludeLatest ? data.tracks.slice(1) : data.tracks
+
+        // Ensure max 8 tracks
+        displayTracks = displayTracks.slice(0, 8)
+
         setTracks(displayTracks)
         setError(null)
       } catch (err) {
@@ -88,21 +93,47 @@ export default function ReleaseCarousel({
     return () => window.removeEventListener("resize", handleResize)
   }, [featured])
 
+  // Ensure currentIndex stays within bounds when visibleCount or tracks change
+  useEffect(() => {
+    if (tracks.length > 0) {
+      const maxIndex = Math.max(0, tracks.length - visibleCount)
+      setCurrentIndex((prev) => Math.min(prev, maxIndex))
+    }
+  }, [tracks.length, visibleCount])
+
   // Get high-res artwork
   function getArtwork(url: string | null) {
     if (!url) return "/placeholder.svg?height=500&width=500"
     return url.replace("-large.", "-t500x500.").replace("large", "t500x500")
   }
 
+  // Format date if available
+  function formatDate(dateString?: string) {
+    if (!dateString) return ""
+    try {
+      return new Date(dateString).toLocaleDateString("en-US", {
+        year: "numeric",
+        month: "long",
+        day: "numeric",
+      })
+    } catch {
+      return ""
+    }
+  }
+
   // Navigation
   function nextSlide() {
-    setCurrentIndex((prev) => (prev + visibleCount >= tracks.length ? 0 : prev + visibleCount))
+    setCurrentIndex((prev) => {
+      const next = prev + visibleCount
+      return next >= tracks.length ? 0 : next
+    })
   }
 
   function prevSlide() {
-    setCurrentIndex((prev) =>
-      prev - visibleCount < 0 ? Math.max(0, tracks.length - visibleCount) : prev - visibleCount,
-    )
+    setCurrentIndex((prev) => {
+      const prevIndex = prev - visibleCount
+      return prevIndex < 0 ? Math.max(0, tracks.length - visibleCount) : prevIndex
+    })
   }
 
   if (loading) {
@@ -139,6 +170,7 @@ export default function ReleaseCarousel({
           <div>
             <h3 className="text-2xl md:text-3xl font-bold text-white font-orbitron">{track.title}</h3>
             <p className="text-blue-400">{track.user.username}</p>
+            {track.created_at && <p className="text-gray-400 text-sm mt-2">Released: {formatDate(track.created_at)}</p>}
           </div>
 
           <div className="flex flex-wrap gap-4 mt-6">
@@ -184,12 +216,12 @@ export default function ReleaseCarousel({
         <div
           className="flex transition-transform duration-500 ease-in-out"
           style={{
-            transform: `translateX(-${currentIndex * (100 / visibleCount)}%)`,
+            transform: `translateX(-${(currentIndex * 100) / tracks.length}%)`,
             width: `${(tracks.length / visibleCount) * 100}%`,
           }}
         >
           {tracks.map((track) => (
-            <div key={track.id} className="px-2" style={{ width: `${(100 / tracks.length) * visibleCount}%` }}>
+            <div key={track.id} className="px-2" style={{ width: `${100 / tracks.length}%` }}>
               <div className="border border-blue-500/20 bg-blue-950/10 hover:bg-blue-950/20 transition-colors rounded-lg overflow-hidden h-full flex flex-col">
                 <div className="aspect-square relative">
                   <img
@@ -209,6 +241,7 @@ export default function ReleaseCarousel({
                 <div className="p-4 flex-1 flex flex-col">
                   <h3 className="text-white font-orbitron font-medium text-lg line-clamp-1">{track.title}</h3>
                   <p className="text-blue-400 text-sm">{track.user.username}</p>
+                  {track.created_at && <p className="text-gray-400 text-xs mt-1">{formatDate(track.created_at)}</p>}
 
                   <div className="mt-auto pt-4">
                     <Link
@@ -234,7 +267,7 @@ export default function ReleaseCarousel({
             key={index}
             onClick={() => setCurrentIndex(index * visibleCount)}
             className={`h-2 rounded-full transition-all ${
-              index * visibleCount === currentIndex ? "w-6 bg-blue-500" : "w-2 bg-gray-600"
+              Math.floor(currentIndex / visibleCount) === index ? "w-6 bg-blue-500" : "w-2 bg-gray-600"
             }`}
             aria-label={`Go to slide ${index + 1}`}
           />
