@@ -2,7 +2,7 @@
 
 import { useState } from "react"
 import Link from "next/link"
-import { Mail, Facebook, Twitter, Music2, ShoppingCart, ArrowRight, Play } from "lucide-react"
+import { Mail, Facebook, Twitter, Music2, ShoppingCart, ArrowRight, Play, Instagram } from "lucide-react"
 import dynamic from "next/dynamic"
 
 const MusicPlayer = dynamic(() => import("@/components/MusicPlayer"), {
@@ -111,7 +111,7 @@ export default function HomePage() {
               <div className="space-y-4">
                 <h2 className="text-xl font-medium text-blue-500 font-orbitron">WHO WE ARE</h2>
                 <h3 className="text-3xl md:text-4xl font-bold text-white font-orbitron">
-                  GOLD COAST'S PREMIER UNDERGROUND ELECTRONIC MUSIC LABEL
+                  GOLD COAST'S PREMIER UNDERGROUND ELECTRONIC LABEL
                 </h3>
               </div>
               <div className="space-y-6">
@@ -218,6 +218,14 @@ export default function HomePage() {
                   >
                     <Music2 className="h-4 w-4" />
                     SoundCloud
+                  </Link>
+                  <Link
+                    href="https://www.instagram.com/tinnie_house_records/"
+                    target="_blank"
+                    className="text-sm text-gray-400 hover:text-white inline-flex items-center gap-2"
+                  >
+                    <Instagram className="h-4 w-4" />
+                    Instagram
                   </Link>
                 </nav>
               </div>

@@ -1,5 +1,5 @@
 import Link from "next/link"
-import { Mail, Facebook, Twitter, Music2, ShoppingCart } from "lucide-react"
+import { Mail, Facebook, Twitter, Music2, ShoppingCart, Instagram } from "lucide-react"
 
 export default function AboutPage() {
   return (
@@ -123,6 +123,14 @@ export default function AboutPage() {
                     >
                       <Music2 className="h-4 w-4" />
                       SoundCloud
+                    </Link>
+                    <Link
+                      href="https://www.instagram.com/tinnie_house_records/"
+                      target="_blank"
+                      className="text-sm text-gray-400 hover:text-white inline-flex items-center gap-2"
+                    >
+                      <Instagram className="h-4 w-4" />
+                      Instagram
                     </Link>
                   </nav>
                 </div>

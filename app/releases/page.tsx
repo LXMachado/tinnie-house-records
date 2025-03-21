@@ -2,7 +2,7 @@
 
 import { useState } from "react"
 import Link from "next/link"
-import { Facebook, Twitter, Music2, ShoppingCart } from "lucide-react"
+import { Facebook, Twitter, Music2, ShoppingCart, Instagram } from "lucide-react"
 import dynamic from "next/dynamic"
 import ReleaseCarousel from "@/components/ReleaseCarousel"
 
@@ -122,6 +122,14 @@ export default function ReleasesPage() {
                     >
                       <Music2 className="h-4 w-4" />
                       SoundCloud
+                    </Link>
+                    <Link
+                      href="https://www.instagram.com/tinnie_house_records/"
+                      target="_blank"
+                      className="text-sm text-gray-400 hover:text-white inline-flex items-center gap-2"
+                    >
+                      <Instagram className="h-4 w-4" />
+                      Instagram
                     </Link>
                   </nav>
                 </div>
