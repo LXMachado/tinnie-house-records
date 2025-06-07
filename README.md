@@ -51,3 +51,12 @@ Follow these steps to set up the project locally:
    ```bash
    git clone https://github.com/yourusername/tinnie-house-records.git
    cd tinnie-house-records
+
+2. **Install dependencies**
+   ```bash
+   npm install
+   ```
+3. **Run the development server**
+   ```bash
+   npm run dev
+   ```
