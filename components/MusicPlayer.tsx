@@ -201,7 +201,6 @@ export default function MusicPlayer({ defaultTrack }: MusicPlayerProps) {
           callback: (err: any) => {
             if (err) {
               console.error(new Date().toISOString(), "Load error:", err)
-              setError('Error loading track. The track may have been removed or  "Load error:', err)
               setError("Error loading track. The track may have been removed or is unavailable.")
               setIsLoading(false)
 
