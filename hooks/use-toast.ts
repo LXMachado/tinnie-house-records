@@ -182,7 +182,10 @@ function useToast() {
         listeners.splice(index, 1)
       }
     }
-  }, [state])
+    // We intentionally run this effect only on mount/unmount
+    // to avoid adding duplicate listeners when the state updates.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   return {
     ...state,
