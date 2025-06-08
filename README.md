@@ -60,3 +60,21 @@ Follow these steps to set up the project locally:
    ```bash
    npm run dev
    ```
+
+## Environment Variables
+
+Set the following variable in a `.env.local` file:
+
+```
+SOUNDCLOUD_CLIENT_ID=your_client_id_here
+```
+
+You can copy `.env.example` and add your actual ID.
+
+### Obtaining a SoundCloud Client ID
+1. Sign in to SoundCloud and open the Developer Tools in your browser.
+2. Play any track and inspect the network requests.
+3. Locate requests to `api.soundcloud.com` that include a `client_id` parameter.
+4. Copy the `client_id` value and paste it into `.env.local`.
+
+
